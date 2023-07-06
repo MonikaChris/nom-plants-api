@@ -16,7 +16,9 @@ Handler.getWeeks = async (req, res, next) => {
 
 Handler.addPlant = async (req, res, next) => {
   try {
-    const newWeek = new Week(req.body);
+    console.log(req.body);
+    const { date, plants, email } = req.body;
+    const newWeek = new Week({ date, plants, email });
     const week = await newWeek.save();
     res.status(200).send(week);
   } catch (error) {
