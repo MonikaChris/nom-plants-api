@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const mongoose = require('mongoose');
+const Handler = require('./modules/handlers');
 
 mongoose.connect(process.env.MONGODB_URI);
 const db = mongoose.connection;
@@ -17,12 +18,16 @@ const app = express();
 
 app.use(cors());
 
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT;
 
 // Home/test route
 app.get('/', (req, res) => {
   res.send('Testing...');
 });
+
+//Routes
+app.get('/weeks', Handler.getWeeks);
+app.post('/plant', Handler.addPlant);
 
 app.use((error, req, res, next) => {
   res.status(500).send(error.message);
