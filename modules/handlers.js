@@ -1,5 +1,7 @@
 'use strict';
 
+const getMonday = require('../modules/dateFormatter');
+
 const Week = require('../models/week');
 
 const Handler = {};
@@ -14,20 +16,12 @@ Handler.getWeeks = async (req, res, next) => {
   }
 };
 
-// Handler.addPlant = async (req, res, next) => {
-//   try {
-//     const { date, plants, email } = req.body;
-//     const newWeek = new Week({ date, plants, email });
-//     const week = await newWeek.save();
-//     res.status(200).send(week);
-//   } catch (error) {
-//     console.error(error);
-//     next(error);
-//   }
-// };
 
 Handler.addPlant = async (req, res, next) => {
-  const week = await Week.findOne({date: req.body.date});
+  // Normalize date - every week is indexed by Monday
+  const date = new Date(req.body.date);
+  const monday = getMonday(date);
+  const week = await Week.findOne({date: monday});
 
   //If week exists update with new plant, else create new week with first plant
   if (week) {
@@ -41,6 +35,10 @@ Handler.addPlant = async (req, res, next) => {
     }
   } else {
     try {
+      // Normalize date
+      req.body.date = monday;
+
+      // Create new week entry
       const newWeek = await Week.create(req.body);
       res.status(200).send(newWeek);
     } catch(error) {
