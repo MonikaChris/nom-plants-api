@@ -1,6 +1,6 @@
 'use strict';
 
-const getMonday = require('../modules/dateFormatter');
+const getMonday = require('./dateFormatter');
 
 const Week = require('../models/week');
 
