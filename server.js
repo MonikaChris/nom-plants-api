@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 });
 
 //Routes
-app.get('/weeks', Handler.getWeeks);
+app.get('/week', Handler.getWeek);
 app.post('/plant', Handler.addPlant);
 
 app.use((error, req, res, next) => {

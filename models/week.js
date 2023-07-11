@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const weekSchema = new Schema({
-  date: Date,
+  date: String,
   plants: [String],
   email: String
 });

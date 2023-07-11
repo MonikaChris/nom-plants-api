@@ -6,9 +6,15 @@ const Week = require('../models/week');
 
 const Handler = {};
 
-Handler.getWeeks = async (req, res, next) => {
+Handler.getWeek = async (req, res, next) => {
+  console.log(`Date Format: ${req.query.date}`);
+  // const date = new Date(req.query.date);
+  // const monday = getMonday(date);
+  // console.log(`Monday: ${monday}`);
+  // console.log('hello');
+
   try {
-    const weeks = await Week.find({});
+    const weeks = await Week.find({date: req.query.date});
     res.status(200).send(weeks);
   } catch (error) {
     console.error(error);
@@ -36,10 +42,16 @@ Handler.addPlant = async (req, res, next) => {
   } else {
     try {
       // Normalize date
-      req.body.date = monday;
+      //req.body.date = monday;
+
+      const newWeekData = {
+        date: monday,
+        plants: req.body.plants,
+        email: req.body.email
+      };
 
       // Create new week entry
-      const newWeek = await Week.create(req.body);
+      const newWeek = await Week.create(newWeekData);
       res.status(200).send(newWeek);
     } catch(error) {
       console.error(error);
