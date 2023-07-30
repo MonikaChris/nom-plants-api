@@ -1,20 +1,15 @@
-'use strict';
+"use strict";
 
-const getMonday = require('./dateFormatter');
+const getMonday = require("./dateFormatter");
 
-const Week = require('../models/week');
+const Week = require("../models/week");
+const { restart } = require("nodemon");
 
 const Handler = {};
 
 Handler.getWeek = async (req, res, next) => {
-  console.log(`Date Format: ${req.query.date}`);
-  // const date = new Date(req.query.date);
-  // const monday = getMonday(date);
-  // console.log(`Monday: ${monday}`);
-  // console.log('hello');
-
   try {
-    const weeks = await Week.find({date: req.query.date});
+    const weeks = await Week.find({ date: req.query.date });
     res.status(200).send(weeks);
   } catch (error) {
     console.error(error);
@@ -22,20 +17,22 @@ Handler.getWeek = async (req, res, next) => {
   }
 };
 
-
 Handler.addPlant = async (req, res, next) => {
   // Normalize date - every week is indexed by Monday
   const date = new Date(req.body.date);
   const monday = getMonday(date);
-  const week = await Week.findOne({date: monday});
+  console.log(`monday: ${monday}`);
+  const week = await Week.findOne({ date: monday });
 
   //If week exists update with new plant, else create new week with first plant
   if (week) {
     week.plants.push(req.body.plants);
     try {
-      const updatedWeek = await Week.findByIdAndUpdate(week.id, week, {new: true});
+      const updatedWeek = await Week.findByIdAndUpdate(week.id, week, {
+        new: true,
+      });
       res.status(200).send(updatedWeek);
-    } catch(error) {
+    } catch (error) {
       console.error(error);
       next(error);
     }
@@ -47,16 +44,40 @@ Handler.addPlant = async (req, res, next) => {
       const newWeekData = {
         date: monday,
         plants: req.body.plants,
-        email: req.body.email
+        email: req.body.email,
       };
 
       // Create new week entry
       const newWeek = await Week.create(newWeekData);
       res.status(200).send(newWeek);
-    } catch(error) {
+    } catch (error) {
       console.error(error);
       next(error);
     }
+  }
+};
+
+Handler.updatePlants = async (req, res, next) => {
+  try {
+    let plantWeek = await Week.findOne({ date: req.body.date });
+
+    if (!plantWeek) {
+      res.status(404).send('Week not found');
+      return;
+    }
+
+    //Replace oldPlant with newPlant, or if newPlant is "", delete oldPlant
+    plantWeek.plants = req.body.newPlant
+      ? plantWeek.plants.map((plant) =>
+        plant === req.body.oldPlant ? req.body.newPlant : plant
+      )
+      : plantWeek.plants.filter((plant) => plant !== req.body.oldPlant);
+
+    await plantWeek.save();
+    res.status(200).send(plantWeek);
+  } catch (error) {
+    console.log(error);
+    next(error);
   }
 };
 

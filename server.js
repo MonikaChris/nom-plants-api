@@ -29,6 +29,7 @@ app.get('/', (req, res) => {
 //Routes
 app.get('/week', Handler.getWeek);
 app.post('/plant', Handler.addPlant);
+app.post('/update_plants', Handler.updatePlants);
 
 app.use((error, req, res, next) => {
   res.status(500).send(error.message);
