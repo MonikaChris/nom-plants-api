@@ -1,9 +1,7 @@
-"use strict";
+'use strict';
 
-const getMonday = require("./dateFormatter");
-
-const Week = require("../models/week");
-//const { restart } = require("nodemon");
+const getMonday = require('./dateFormatter');
+const Week = require('../models/week');
 
 const Handler = {};
 
@@ -19,13 +17,13 @@ Handler.getWeek = async (req, res, next) => {
 
 Handler.addPlant = async (req, res, next) => {
   // Normalize date - every week is indexed by Monday
-  const date = new Date(req.body.date);
+  const date = new Date(req.params.weekStartDate);
   const monday = getMonday(date);
   const week = await Week.findOne({ date: monday });
 
   //If week exists update with new plant, else create new week with first plant
   if (week) {
-    week.plants.push(req.body.plants);
+    week.plants.push(req.params.plant);
     try {
       const updatedWeek = await Week.findByIdAndUpdate(week.id, week, {
         new: true,
@@ -42,7 +40,7 @@ Handler.addPlant = async (req, res, next) => {
 
       const newWeekData = {
         date: monday,
-        plants: req.body.plants,
+        plants: req.params.plant,
         email: req.body.email,
       };
 
