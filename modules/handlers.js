@@ -3,14 +3,14 @@
 const getMonday = require("./dateFormatter");
 
 const Week = require("../models/week");
-const { restart } = require("nodemon");
+//const { restart } = require("nodemon");
 
 const Handler = {};
 
 Handler.getWeek = async (req, res, next) => {
   try {
-    const weeks = await Week.find({ date: req.query.date });
-    res.status(200).send(weeks);
+    const week = await Week.findOne({ date: req.params.weekStartDate });
+    res.status(200).send(week);
   } catch (error) {
     console.error(error);
     next(error);
@@ -21,7 +21,6 @@ Handler.addPlant = async (req, res, next) => {
   // Normalize date - every week is indexed by Monday
   const date = new Date(req.body.date);
   const monday = getMonday(date);
-  console.log(`monday: ${monday}`);
   const week = await Week.findOne({ date: monday });
 
   //If week exists update with new plant, else create new week with first plant
@@ -57,7 +56,7 @@ Handler.addPlant = async (req, res, next) => {
   }
 };
 
-Handler.updatePlants = async (req, res, next) => {
+Handler.updatePlant = async (req, res, next) => {
   try {
     let plantWeek = await Week.findOne({ date: req.body.date });
 
