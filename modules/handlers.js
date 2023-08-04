@@ -23,6 +23,11 @@ Handler.addPlant = async (req, res, next) => {
 
   const week = await Week.findOne({ date: monday });
 
+  // No duplicate plants
+  if (week.plants.includes(req.params.plant)) {
+    return res.status(409).send('Plant already exists');
+  }
+
   try {
     if (week) {
       week.plants.push(req.params.plant);
