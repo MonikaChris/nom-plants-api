@@ -53,12 +53,12 @@ Handler.updatePlant = async (req, res, next) => {
       return;
     }
 
-    //Replace oldPlant with newPlant, or if newPlant is "", delete oldPlant
-    week.plants = req.body.newPlant
-      ? week.plants.map((p) => (p === req.params.plant ? req.body.newPlant : p))
-      : week.plants.filter((p) => p !== req.params.plant);
+    if (req.body.newPlant) {
+      week.plants = week.plants.map((plant) => plant === req.params.plant ? req.body.newPlant : plant);
+    } else {
+      week.plants = week.plants.filter((plant) => plant !== req.params.plant);
+    }
 
-    week.plants = week.plants.filter((p) => p !== "");
     await week.save();
     res.status(200).send(week);
   } catch (error) {
