@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 //Routes
 app.get('/api/weeks/:weekStartDate', Handler.getWeek);
 app.post('/api/weeks/:weekStartDate/plants/:plant', Handler.addPlant);
-app.post('/update_plants', Handler.updatePlant);
+app.put('/api/weeks/:weekStartDate/plants/:plant', Handler.updatePlant);
 
 app.use((error, req, res, next) => {
   res.status(500).send(error.message);
