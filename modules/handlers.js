@@ -1,4 +1,5 @@
 "use strict";
+const plantData = require('./data/plantsData.js');
 
 const getMonday = require("./dateFormatter");
 const Week = require("../models/week");
@@ -15,7 +16,6 @@ Handler.getWeek = async (req, res, next) => {
   }
 };
 
-
 Handler.addPlant = async (req, res, next) => {
   // Normalize date - every week is indexed by Monday
   const date = new Date(req.params.weekStartDate);
@@ -25,7 +25,7 @@ Handler.addPlant = async (req, res, next) => {
 
   // No duplicate plants
   if (week.plants.includes(req.params.plant)) {
-    return res.status(409).send('Plant already exists');
+    return res.status(409).send("Plant already exists");
   }
 
   try {
@@ -48,7 +48,6 @@ Handler.addPlant = async (req, res, next) => {
   }
 };
 
-
 Handler.updatePlant = async (req, res, next) => {
   try {
     let week = await Week.findOne({ date: req.params.weekStartDate });
@@ -59,7 +58,9 @@ Handler.updatePlant = async (req, res, next) => {
     }
 
     if (req.body.newPlant) {
-      week.plants = week.plants.map((plant) => plant === req.params.plant ? req.body.newPlant : plant);
+      week.plants = week.plants.map((plant) =>
+        plant === req.params.plant ? req.body.newPlant : plant
+      );
     } else {
       week.plants = week.plants.filter((plant) => plant !== req.params.plant);
     }
@@ -70,6 +71,21 @@ Handler.updatePlant = async (req, res, next) => {
     console.log(error);
     next(error);
   }
+};
+
+Handler.getDemoData = (req, res) => {
+  const date = req.params.date;
+  const numOfDates = 5;
+
+  const dates= getWeekDates(date, numOfDates);
+
+  const dateObjs = dates.map(date, idx => {
+    const dateObj = {date, plants: [], email: 'lovebug@veggies.com'};
+    dateObj.plants = plantData[idx];
+    return dateObj;
+  });
+
+  res.status(200).send(dateObjs);
 };
 
 module.exports = Handler;
