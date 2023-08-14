@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 app.get('/api/weeks/:weekStartDate', Handler.getWeek);
 app.post('/api/weeks/:weekStartDate/plants/:plant', Handler.addPlant);
 app.put('/api/weeks/:weekStartDate/plants/:plant', Handler.updatePlant);
-app.get('api/demo', Handler.getDemoData);
+app.get('/api/demo/:date', Handler.getDemoData);
 
 app.use((error, req, res, next) => {
   res.status(500).send(error.message);

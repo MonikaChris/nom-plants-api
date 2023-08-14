@@ -1,7 +1,6 @@
 "use strict";
-const plantData = require('./data/plantsData.js');
-
-const getMonday = require("./dateFormatter");
+const plantData = require('../data/plantsData.js');
+const { getMonday, getPreviousWeekDates } = require("./dateFormatter");
 const Week = require("../models/week");
 
 const Handler = {};
@@ -74,12 +73,12 @@ Handler.updatePlant = async (req, res, next) => {
 };
 
 Handler.getDemoData = (req, res) => {
-  const date = req.params.date;
+  const startDate = req.params.date;
   const numOfDates = 5;
 
-  const dates= getWeekDates(date, numOfDates);
+  const dates= getPreviousWeekDates(startDate, numOfDates);
 
-  const dateObjs = dates.map(date, idx => {
+  const dateObjs = dates.map((date, idx) => {
     const dateObj = {date, plants: [], email: 'lovebug@veggies.com'};
     dateObj.plants = plantData[idx];
     return dateObj;

@@ -9,5 +9,24 @@ function getMonday(date) {
   return month + '-' + day + '-' + year;
 }
 
-module.exports = getMonday;
+function getPreviousWeekDates(startDate, numOfDates) {
+  const dates = [];
+  startDate = new Date(startDate);
+
+  for(let i=1; i <= numOfDates; i++) {
+    const millisecondsToSubtract = i * 7 * 24 * 60 * 60 * 1000;
+    const newDate = new Date(startDate.getTime() - millisecondsToSubtract);
+
+    const formattedDate = formatDate(newDate);
+    dates.push(formattedDate);
+  }
+
+  return dates;
+}
+
+function formatDate(date) {
+  return `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
+}
+
+module.exports = {getMonday, getPreviousWeekDates};
 
