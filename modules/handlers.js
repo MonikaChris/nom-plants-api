@@ -17,30 +17,27 @@ Handler.getWeek = async (req, res, next) => {
 
 Handler.addPlant = async (req, res, next) => {
   // Normalize date - every week is indexed by Monday
-  const date = new Date(req.params.weekStartDate);
-  const monday = getMonday(date);
-
-  const week = await Week.findOne({ date: monday });
-
-  // No duplicate plants
-  if (week.plants.includes(req.params.plant)) {
-    return res.status(409).send("Plant already exists");
-  }
+  const monday = getMonday(new Date(req.params.weekStartDate));
 
   try {
+    let week = await Week.findOne({ date: monday });
+
     if (week) {
+      // No duplicate plants
+      if (week.plants.includes(req.params.plant)) {
+        return res.status(409).send("Plant already exists");
+      }
       week.plants.push(req.params.plant);
       await week.save();
-      res.status(200).send(week);
     } else {
-      const newWeek = {
+      week = {
         date: monday,
         plants: req.params.plant,
         email: req.body.email,
       };
-      const createdWeek = await Week.create(newWeek);
-      res.status(201).send(createdWeek);
+      await Week.save(week);
     }
+    res.status(201).send(week);
   } catch (error) {
     console.error(error);
     next(error);
