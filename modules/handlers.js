@@ -30,12 +30,12 @@ Handler.addPlant = async (req, res, next) => {
       week.plants.push(req.params.plant);
       await week.save();
     } else {
-      week = {
+      week = new Week({
         date: monday,
         plants: req.params.plant,
         email: req.body.email,
-      };
-      await Week.save(week);
+      });
+      await week.save();
     }
     res.status(201).send(week);
   } catch (error) {
