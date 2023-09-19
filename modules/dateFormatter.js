@@ -12,8 +12,9 @@ function getMonday(date) {
 function getPreviousWeekDates(startDate, numOfDates) {
   const dates = [];
   startDate = new Date(startDate);
+  dates.push(formatDate(startDate));
 
-  for(let i=1; i <= numOfDates; i++) {
+  for(let i=1; i <= numOfDates-1; i++) {
     const millisecondsToSubtract = i * 7 * 24 * 60 * 60 * 1000;
     const newDate = new Date(startDate.getTime() - millisecondsToSubtract);
 
