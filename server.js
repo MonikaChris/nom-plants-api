@@ -5,6 +5,7 @@ const cors = require('cors');
 require('dotenv').config();
 const mongoose = require('mongoose');
 const Handler = require('./modules/handlers');
+const registerUser = require('./modules/register');
 
 mongoose.connect(process.env.MONGODB_URI);
 const db = mongoose.connection;
@@ -25,6 +26,8 @@ const PORT = process.env.PORT;
 app.get('/', (req, res) => {
   res.send('Testing...');
 });
+
+app.post('/api/register',registerUser);
 
 //Routes
 app.get('/api/weeks/:weekStartDate', Handler.getWeek);

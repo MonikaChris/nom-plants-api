@@ -1,7 +1,7 @@
 "use strict";
 const plantData = require('../data/plantsData.js');
 const { getMonday, getPreviousWeekDates } = require("./dateFormatter");
-const Week = require("../models/week");
+const Week = require("../models/Week.js");
 
 const Handler = {};
 
