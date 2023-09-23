@@ -8,11 +8,11 @@ async function refresh(req, res, next) {
     const refreshToken = cookies.jwt;
 
     const user = await User.findOne({ refreshToken });
-    if (!user) return res.status(401).send("Not found");
+    if (!user) return res.status(403).send("Unauthorized");
 
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
       if (err || decoded.username !== user.username)
-        return res.status(401).send("Not found");
+        return res.status(403).send("Unauthorized");
 
       const accessToken = jwt.sign(
         {
