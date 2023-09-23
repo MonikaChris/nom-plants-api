@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-async function refresh(req, res, next) {
+async function refreshJWT(req, res, next) {
   try {
     const cookies = req.cookies;
     if (!cookies?.jwt) return res.status(401).send("Not found");
@@ -28,4 +28,4 @@ async function refresh(req, res, next) {
   }
 }
 
-module.exports = refresh;
+module.exports = refreshJWT;
