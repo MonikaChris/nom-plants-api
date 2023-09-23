@@ -6,6 +6,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const Handler = require('./modules/handlers');
 const registerUser = require('./modules/register');
+const authenticateUser = require('./modules/auth');
 
 mongoose.connect(process.env.MONGODB_URI);
 const db = mongoose.connection;
@@ -28,6 +29,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/register',registerUser);
+app.post('/api/auth', authenticateUser);
 
 //Routes
 app.get('/api/weeks/:weekStartDate', Handler.getWeek);
