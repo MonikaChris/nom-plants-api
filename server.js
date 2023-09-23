@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const Handler = require('./modules/handlers');
 const registerUser = require('./modules/register');
 const authenticateUser = require('./modules/auth');
+const refresh = require('./module/refresh');
 
 mongoose.connect(process.env.MONGODB_URI);
 const db = mongoose.connection;
@@ -30,6 +31,7 @@ app.get('/', (req, res) => {
 
 app.post('/api/register',registerUser);
 app.post('/api/auth', authenticateUser);
+app.post('api/refresh', refresh);
 
 //Routes
 app.get('/api/weeks/:weekStartDate', Handler.getWeek);
