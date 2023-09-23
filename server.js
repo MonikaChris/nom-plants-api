@@ -9,6 +9,7 @@ const registerUser = require("./modules/register");
 const authenticateUser = require("./modules/auth");
 const refreshJWT = require("./module/refresh");
 const logout = require("./modules/logout");
+const verifyJWT = require("./middleware/verifyJWT");
 
 mongoose.connect(process.env.MONGODB_URI);
 const db = mongoose.connection;
@@ -34,12 +35,12 @@ app.post("/api/register", registerUser);
 app.post("/api/auth", authenticateUser);
 app.post("api/refresh", refreshJWT);
 app.post("api/logout", logout);
+app.get("/api/demo/:date", Handler.getDemoData);
 
-//Routes
+app.use(verifyJWT);
 app.get("/api/weeks/:weekStartDate", Handler.getWeek);
 app.post("/api/weeks/:weekStartDate/plants/:plant", Handler.addPlant);
 app.put("/api/weeks/:weekStartDate/plants/:plant", Handler.updatePlant);
-app.get("/api/demo/:date", Handler.getDemoData);
 
 app.use((error, req, res, next) => {
   res.status(500).send(error.message);
