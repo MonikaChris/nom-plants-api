@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const Handler = require("./modules/handlers");
 const registerUser = require("./modules/register");
 const authenticateUser = require("./modules/auth");
-const refreshJWT = require("./module/refresh");
+const refreshJWT = require("./modules/refresh");
 const logout = require("./modules/logout");
 const verifyJWT = require("./middleware/verifyJWT");
 
@@ -21,7 +21,15 @@ db.once("open", function () {
 
 const app = express();
 
-app.use(cors());
+//CORS configuration
+const corsOptions = {
+  origin: process.env.FRONTEND_DOMAIN,
+  methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
+  credentials: true, //allows cookies to be sent with requests
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 const PORT = process.env.PORT;
