@@ -41,7 +41,7 @@ app.get("/", (req, res) => {
 
 app.post("/api/register", registerUser);
 app.post("/api/auth", authenticateUser);
-app.post("api/refresh", refreshJWT);
+app.get("api/refresh", refreshJWT);
 app.post("api/logout", logout);
 app.get("/api/demo/:date", Handler.getDemoData);
 
