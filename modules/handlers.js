@@ -1,5 +1,5 @@
 "use strict";
-const plantData = require('../data/plantsData.js');
+const plantData = require("../data/plantsData.js");
 const { getMonday, getPreviousWeekDates } = require("./dateFormatter");
 const Week = require("../models/Week.js");
 
@@ -7,7 +7,7 @@ const Handler = {};
 
 Handler.getWeek = async (req, res, next) => {
   try {
-    const week = await Week.findOne({ date: req.params.weekStartDate });
+    const week = await Week.findOne({ email: req.user, date: req.params.weekStartDate });
     res.status(200).send(week);
   } catch (error) {
     console.error(error);
@@ -20,7 +20,7 @@ Handler.addPlant = async (req, res, next) => {
   const monday = getMonday(new Date(req.params.weekStartDate));
 
   try {
-    let week = await Week.findOne({ date: monday });
+    let week = await Week.findOne({ email: req.user, date: monday });
 
     if (week) {
       // No duplicate plants
@@ -33,7 +33,7 @@ Handler.addPlant = async (req, res, next) => {
       week = new Week({
         date: monday,
         plants: req.params.plant,
-        email: req.body.email,
+        email: req.user,
       });
       await week.save();
     }
@@ -46,7 +46,7 @@ Handler.addPlant = async (req, res, next) => {
 
 Handler.updatePlant = async (req, res, next) => {
   try {
-    let week = await Week.findOne({ date: req.params.weekStartDate });
+    let week = await Week.findOne({ email: req.user, date: req.params.weekStartDate });
 
     if (!week) {
       res.status(404).send("Week not found");
@@ -73,10 +73,10 @@ Handler.getDemoData = (req, res) => {
   const startDate = req.params.date;
   const numOfDates = 5;
 
-  const dates= getPreviousWeekDates(startDate, numOfDates);
+  const dates = getPreviousWeekDates(startDate, numOfDates);
 
   const dateObjs = dates.map((date, idx) => {
-    const dateObj = {date, plants: [], email: 'lovebug@veggies.com'};
+    const dateObj = { date, plants: [], email: "lovebug@veggies.com" };
     dateObj.plants = plantData[idx];
     return dateObj;
   });
