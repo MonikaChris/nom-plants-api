@@ -3,6 +3,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const Handler = require("./modules/handlers");
 const registerUser = require("./modules/register");
@@ -31,6 +32,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 
 const PORT = process.env.PORT;
 
@@ -41,8 +43,8 @@ app.get("/", (req, res) => {
 
 app.post("/api/register", registerUser);
 app.post("/api/auth", authenticateUser);
-app.get("api/refresh", refreshJWT);
-app.post("api/logout", logout);
+app.get("/api/refresh", refreshJWT);
+app.post("/api/logout", logout);
 app.get("/api/demo/:date", Handler.getDemoData);
 
 app.use(verifyJWT);
