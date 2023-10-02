@@ -18,7 +18,7 @@ async function authenticateUser(req, res, next) {
   else {
     try {
       const { accessToken, refreshToken } = createTokens(user);
-      
+
       //Save refresh token for user in database
       user.refreshToken = refreshToken;
       await user.save();
